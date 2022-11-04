@@ -5,12 +5,14 @@ public class Player {
     private int id;
     private CardDeck left;
     private CardDeck right;
+    private PlayerHand hand;
 
     public Player(CardDeck left, CardDeck right)
     {
         this.id = ++counter;
         this.left = left;
         this.right = right;
+        this.hand = new PlayerHand();
     }
 
     public int getId()
@@ -33,15 +35,24 @@ public class Player {
     	return right;
     }
     
+    public PlayerHand getHand() {
+		return hand;
+    }
+    
     public class PlayerHand
     {
     	private int handSize = 4;
         private ArrayList<Card> hand = new ArrayList<Card>();
         
 
-        public ArrayList<Card> getHand()
+        public ArrayList<Card> getHandList()
         {
             return hand;
+        }
+        
+        public void addToHand(Card card)
+        {
+        	hand.add(card);
         }
 
         private void drawCard()

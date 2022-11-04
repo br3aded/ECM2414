@@ -30,7 +30,10 @@ public class CardGame {
 		}
 	    
 	    System.out.println("|===========|");
-	    System.out.println(Players.get(3).getRight());
+	    //System.out.println(Players.get(3).getRight());
+	    distributeCards(Cards);
+	    System.out.println(Players.get(Players.size()-1).getHand().getHandList());
+	    System.out.println(CardDecks.get(CardDecks.size()-1).getDeck());
 	    
 	}
 	
@@ -83,6 +86,22 @@ public class CardGame {
 				Players.add(createPlayer(CardDecks.get(x), CardDecks.get(0)));
 			}
 		}
+	}
+	
+	private static void distributeCards(ArrayList<Card> Cards){
+		for(int i=0; i<4;i++) {
+			for(int j =0; j<numberOfPlayers;j++) {
+				((Players.get(j)).getHand()).addToHand(Cards.get(0));
+				Cards.remove(0);
+			}
+		}
+		for(int i=0; i<4;i++) {
+			for(int j=0 ; j<numberOfPlayers;j++) {
+				(CardDecks.get(j)).enQueue(Cards.get(0));
+				Cards.remove(0);
+			}
+		}
+		System.out.println(Cards.size());
 	}
 	
     private Card createCard(int value)
