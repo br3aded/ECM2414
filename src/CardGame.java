@@ -1,4 +1,20 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
 public class CardGame {
+	public static void main(String[] args) {
+		ArrayList<Card> Cards = new ArrayList<Card>();
+		ArrayList<Player> Players = new ArrayList<Player>();
+		ArrayList<CardDeck> CardDecks = new ArrayList<CardDeck>();
+		
+		Scanner myObj = new Scanner(System.in);  // Create a Scanner object
+	    System.out.println("Please enter the number of players:");
+	    String numberOfPlayers = myObj.nextLine();  // Read user input
+	
+	
+	
+	
+	
     private Card createCard(int value)
     {
         Card card = new Card(value);
@@ -17,8 +33,4 @@ public class CardGame {
         return player;
     }
 
-    private void main(String args[])
-    {
-        
-    }
 }
