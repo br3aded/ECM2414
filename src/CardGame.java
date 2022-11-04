@@ -8,41 +8,44 @@ import java.util.Scanner;
 
 public class CardGame {
 	public static void main(String[] args) throws IOException {
-		ArrayList<Card> Cards = new ArrayList<Card>();
 		ArrayList<Player> Players = new ArrayList<Player>();
 		ArrayList<CardDeck> CardDecks = new ArrayList<CardDeck>();
 		
 		Scanner myScan1 = new Scanner(System.in);  // Create a Scanner object
 	    System.out.println("Please enter the number of players:");
 	    Integer numberOfPlayers = myScan1.nextInt();  // Read user input
-	    myScan1.close();
 	    
-	    BufferedReader pack = getPack(numberOfPlayers);
-	    for (int i=0; i<8*numberOfPlayers ; i++) {
-	    	pack.readLine();
-	    }
+	    ArrayList<Card> Cards = packReader(numberOfPlayers);
+	    System.out.println(Cards);
+	    myScan1.close();
 	}
 	
-	public static BufferedReader getPack(Integer numberOfPlayers) throws IOException{
+	public static ArrayList<Card> packReader(Integer numberOfPlayers) throws IOException{
     	
     	Scanner myScan2 = new Scanner(System.in);  // Create a Scanner object
 	    System.out.println("Please enter the file Name:");
 	    String fileName = myScan2.nextLine();  // Read user input
-	    myScan2.close();
 	    
-	    int lines = 0;
-	    BufferedReader reader = null;
-	    try {
-	    	reader = new BufferedReader(new FileReader(fileName));
-	 	    while (reader.readLine() != null) lines++;
-	      } catch (FileNotFoundException e) {
-	        System.out.println("An error occurred.");
-	        e.printStackTrace();
-	      }
-	    if(lines != numberOfPlayers *8) {
-	    	getPack(numberOfPlayers);
+	    File f = new File("src/" + fileName);
+	    FileReader fr = new FileReader(f);
+	    BufferedReader reader = new BufferedReader(fr);
+	    
+	    ArrayList<Card> Cards = new ArrayList<Card>();
+	    
+	    String line;
+	    while((line = reader.readLine()) != null) {
+	    	Card card = new Card(Integer.parseInt(line));
+	    	Cards.add(card);
 	    }
-		return reader;
+	    System.out.println(Cards.size());
+	    if(Cards.size() != numberOfPlayers *8) {
+	    	System.out.println("Incorrect Pack Length");
+	    	packReader(numberOfPlayers);
+	    }
+	    
+	    myScan2.close();
+	    reader.close();
+	    return Cards;
     }
 	
     private Card createCard(int value)
