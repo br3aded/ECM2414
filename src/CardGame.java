@@ -7,20 +7,34 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class CardGame {
-	public static void main(String[] args) throws IOException {
-		ArrayList<Player> Players = new ArrayList<Player>();
-		ArrayList<CardDeck> CardDecks = new ArrayList<CardDeck>();
-		
+	
+	private static ArrayList<Player> Players = new ArrayList<Player>();
+	private static ArrayList<CardDeck> CardDecks = new ArrayList<CardDeck>();
+	private static Integer numberOfPlayers;
+	
+	public static void main(String[] args) throws IOException {		
 		Scanner myScan1 = new Scanner(System.in);  // Create a Scanner object
 	    System.out.println("Please enter the number of players:");
-	    Integer numberOfPlayers = myScan1.nextInt();  // Read user input
+	    numberOfPlayers = myScan1.nextInt();  // Read user input
 	    
 	    ArrayList<Card> Cards = packReader(numberOfPlayers);
 	    System.out.println(Cards);
 	    myScan1.close();
+	    
+	    generateDecks();
+	    generatePlayers();
+	    
+	    for (int x = 0; x < CardDecks.size(); x++)
+		{
+			System.out.println(CardDecks.get(x));
+		}
+	    
+	    System.out.println("|===========|");
+	    System.out.println(Players.get(3).getRight());
+	    
 	}
 	
-	public static ArrayList<Card> packReader(Integer numberOfPlayers) throws IOException{
+	private static ArrayList<Card> packReader(Integer numberOfPlayers) throws IOException{
     	
     	Scanner myScan2 = new Scanner(System.in);  // Create a Scanner object
 	    System.out.println("Please enter the file Name:");
@@ -48,21 +62,44 @@ public class CardGame {
 	    return Cards;
     }
 	
+	private static void generateDecks()
+	{
+		for (int x = 0; x < numberOfPlayers; x++)
+		{
+			CardDecks.add(createCardDeck());
+		}
+	}
+	
+	private static void generatePlayers()
+	{
+		for (int x = 0; x < numberOfPlayers; x++)
+		{
+			if (x+1 < numberOfPlayers-1)
+			{
+				Players.add(createPlayer(CardDecks.get(x), CardDecks.get(x+1)));
+			}
+			else if (x+1 >= numberOfPlayers-1)
+			{
+				Players.add(createPlayer(CardDecks.get(x), CardDecks.get(0)));
+			}
+		}
+	}
+	
     private Card createCard(int value)
     {
         Card card = new Card(value);
         return card;
     }
 
-    private CardDeck createCardDeck(int value)
+    private static CardDeck createCardDeck()
     {
         CardDeck cardDeck = new CardDeck();
         return cardDeck;
     }
 
-    private Player createPlayer(int value)
+    private static Player createPlayer(CardDeck left, CardDeck right)
     {
-        Player player = new Player();
+        Player player = new Player(left, right);
         return player;
     }
 

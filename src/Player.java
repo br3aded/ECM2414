@@ -23,6 +23,16 @@ public class Player {
         // If win: stop all threads and end game.
     }
     
+    public CardDeck getLeft()
+    {
+    	return left;
+    }
+    
+    public CardDeck getRight()
+    {
+    	return right;
+    }
+    
     public class PlayerHand
     {
     	private int handSize = 4;
