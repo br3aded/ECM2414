@@ -18,7 +18,9 @@ public class CardGame {
 	    myScan1.close();
 	    
 	    BufferedReader pack = getPack(numberOfPlayers);
-	
+	    for (int i=0; i<8*numberOfPlayers ; i++) {
+	    	pack.readLine();
+	    }
 	}
 	
 	public static BufferedReader getPack(Integer numberOfPlayers) throws IOException{
