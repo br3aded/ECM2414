@@ -10,6 +10,7 @@ public class CardGame {
 		Scanner myObj = new Scanner(System.in);  // Create a Scanner object
 	    System.out.println("Please enter the number of players:");
 	    String numberOfPlayers = myObj.nextLine();  // Read user input
+	}
 	
 	
 	
