@@ -10,6 +10,7 @@ public class CardGame {
 	
 	private static ArrayList<Player> Players = new ArrayList<Player>();
 	private static ArrayList<CardDeck> CardDecks = new ArrayList<CardDeck>();
+	private static ArrayList<Thread> PlayerThreads = new ArrayList<Thread>();
 	private static Integer numberOfPlayers;
 	
 	public static void main(String[] args) throws IOException {		
