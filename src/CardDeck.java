@@ -22,12 +22,12 @@ public class CardDeck
         return deck;
     }
 
-    private void enQueue(Card card)
+    public void enQueue(Card card)
     {
         deck.add(card);
     }
 
-    private Card deQueue()
+    public Card deQueue()
     {
         // Removes and returns the head of the queue
         return deck.poll(); 

@@ -1,10 +1,16 @@
+import java.util.ArrayList; 
+
 public class Player {
     private static int counter;
     private int id;
+    private CardDeck left;
+    private CardDeck right;
 
-    public Player()
+    public Player(CardDeck left, CardDeck right)
     {
         this.id = ++counter;
+        this.left = left;
+        this.right = right;
     }
 
     public int getId()
@@ -20,23 +26,26 @@ public class Player {
     public class PlayerHand
     {
     	private int handSize = 4;
-        private Card[] hand = new Card[handSize];
+        private ArrayList<Card> hand = new ArrayList<Card>();
         
-        public Card[] getHand()
+
+        public ArrayList<Card> getHand()
         {
             return hand;
         }
 
         private void drawCard()
-        {
-            // Assign previous deck;
-            // hand.add(previousDeck.deQueue());
+        {	
+        	if (hand.size() <= handSize) return;
+        	
+        	Card newCard = left.deQueue();
+        	hand.add(newCard);
         }
 
         private void pushCard(Card card)
         {
-            // Assign next deck;
-            // nextDeck.enQueue(hand.pop(card));
+        	hand.remove(card);
+            right.enQueue(card);
         }
     }
 }
