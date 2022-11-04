@@ -15,7 +15,7 @@ public class CardGame {
 	
 	public static void main(String[] args) throws IOException {		
 		Scanner myScan1 = new Scanner(System.in);  // Create a Scanner object
-	    System.out.println("Please enter the number of players:");
+	    System.out.println("Please enter the number of players:");//Asks for number of players
 	    numberOfPlayers = myScan1.nextInt();  // Read user input
 	    
 	    ArrayList<Card> Cards = packReader(numberOfPlayers);
@@ -38,24 +38,38 @@ public class CardGame {
 	    
 	}
 	
+	private static void createThreads(){
+		//creates threads
+	}
+	
+	private static void startThreads() {
+		//starts threads
+	}
+	
+	//need to check for incorrect pack length and incorrect pack name
 	private static ArrayList<Card> packReader(Integer numberOfPlayers) throws IOException{
     	
+		//reads file name
     	Scanner myScan2 = new Scanner(System.in);  // Create a Scanner object
 	    System.out.println("Please enter the file Name:");
 	    String fileName = myScan2.nextLine();  // Read user input
 	    
+	    //reads file
 	    File f = new File("src/" + fileName);
 	    FileReader fr = new FileReader(f);
 	    BufferedReader reader = new BufferedReader(fr);
 	    
+	    //creates new card ArrayList
 	    ArrayList<Card> Cards = new ArrayList<Card>();
 	    
+	    //reads lines and adds cards objects to the ArrayList
 	    String line;
 	    while((line = reader.readLine()) != null) {
 	    	Card card = new Card(Integer.parseInt(line));
 	    	Cards.add(card);
 	    }
-	    System.out.println(Cards.size());
+	    
+	    //checks to see if the pack is the correct length
 	    if(Cards.size() != numberOfPlayers *8) {
 	    	System.out.println("Incorrect Pack Length");
 	    	packReader(numberOfPlayers);
@@ -66,6 +80,7 @@ public class CardGame {
 	    return Cards;
     }
 	
+	//generates the CardDeck objects and stores in ArrayLists
 	private static void generateDecks()
 	{
 		for (int x = 0; x < numberOfPlayers; x++)
@@ -74,6 +89,7 @@ public class CardGame {
 		}
 	}
 	
+	//generates the Player Objects , giving each player the CardDeck on the left and right in the topology
 	private static void generatePlayers()
 	{
 		for (int x = 0; x < numberOfPlayers; x++)
@@ -89,6 +105,7 @@ public class CardGame {
 		}
 	}
 	
+	//Distributes the cards to the players and then to the CardDecks
 	private static void distributeCards(ArrayList<Card> Cards){
 		for(int i=0; i<4;i++) {
 			for(int j =0; j<numberOfPlayers;j++) {
@@ -105,6 +122,7 @@ public class CardGame {
 		System.out.println(Cards.size());
 	}
 	
+	//not sure if we need anything below this
     private Card createCard(int value)
     {
         Card card = new Card(value);
