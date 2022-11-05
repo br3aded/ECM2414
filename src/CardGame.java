@@ -33,17 +33,42 @@ public class CardGame {
 	    System.out.println("|===========|");
 	    //System.out.println(Players.get(3).getRight());
 	    distributeCards(Cards);
+	    createThreads();
+	    startThreads();
+	    
+	    /*
 	    System.out.println(Players.get(Players.size()-1).getHand().getHandList());
 	    System.out.println(CardDecks.get(CardDecks.size()-1).getDeck());
-	    
+	    System.out.println(PlayerThreads);
+	    System.out.println(PlayerThreads.size());*/
 	}
 	
 	private static void createThreads(){
-		//creates threads
+		for(int i=0; i<numberOfPlayers ;i++) {
+			Thread thread = new Thread(new Runnable(){
+	            @Override
+	            public void run(){
+	                for (int i =1; i <=1000000; i++) { //maybe change this to a while loop
+	                	
+						//((Players.get(i)).getHand()).drawCard();
+	                    //will remove null when code changed
+	                    //((Players.get(i)).getHand()).pushCard(null);
+	                    //(Players.get(i)).checkWin();
+					}
+	            }
+	        });
+			PlayerThreads.add(thread);
+			}
 	}
 	
 	private static void startThreads() {
-		//starts threads
+		for(int i=0; i<numberOfPlayers;i++) {
+			PlayerThreads.get(i).start();
+			if(PlayerThreads.get(i).isAlive() == true) {
+				System.out.println("Thread " + i + " is Running");
+			}
+		}
+		
 	}
 	
 	//need to check for incorrect pack length and incorrect pack name

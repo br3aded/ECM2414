@@ -20,7 +20,7 @@ public class Player {
         return id;
     }
 
-    private void checkWin()
+    public void checkWin()
     {
         // If win: stop all threads and end game.
     }
@@ -55,15 +55,16 @@ public class Player {
         	hand.add(card);
         }
 
-        private void drawCard()
+        public void drawCard()
         {	
         	if (hand.size() <= handSize) return;
         	
         	Card newCard = left.deQueue();
         	hand.add(newCard);
         }
-
-        private void pushCard(Card card)
+        
+        //need to change this to pick a card from the hand
+        public void pushCard(Card card)
         {
         	hand.remove(card);
             right.enQueue(card);
