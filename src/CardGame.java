@@ -19,19 +19,18 @@ public class CardGame {
 	    numberOfPlayers = myScan1.nextInt();  // Read user input
 	    
 	    ArrayList<Card> Cards = packReader(numberOfPlayers);
-	    System.out.println(Cards);
 	    myScan1.close();
-	    
 	    generateDecks();
 	    generatePlayers();
 	    
+	    /*
 	    for (int x = 0; x < CardDecks.size(); x++)
 		{
 			System.out.println(CardDecks.get(x));
 		}
 	    
 	    System.out.println("|===========|");
-	    //System.out.println(Players.get(3).getRight());
+	    System.out.println(Players.get(3).getRight());*/
 	    distributeCards(Cards);
 	    createThreads();
 	    startThreads();
@@ -49,10 +48,9 @@ public class CardGame {
 	            @Override
 	            public void run(){
 	                for (int i =1; i <=1000000; i++) { //maybe change this to a while loop
-	                	
-						//((Players.get(i)).getHand()).drawCard();
+	                	((Players.get(i)).getHand()).pushCard(null);
+						((Players.get(i)).getHand()).drawCard();
 	                    //will remove null when code changed
-	                    //((Players.get(i)).getHand()).pushCard(null);
 	                    //(Players.get(i)).checkWin();
 					}
 	            }
