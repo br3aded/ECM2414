@@ -24,7 +24,9 @@ public class Player {
     public boolean checkWin()
     {
         for(int i=0; i<4;i++) {
-        	if(hand.getHandList().get(0).getValue() != id) {
+        	if(hand.getHandList().get(i).getValue() == id) {
+        		
+        	} else {
         		return false;
         	}
         }
@@ -73,14 +75,27 @@ public class Player {
         {
         	ArrayList<Card> tempCardLocation = new ArrayList<Card>();
         	for(int i =0; i<this.hand.size(); i++) {
-        		if(this.hand.get(i).getValue() == getId()) {
+        		//issue with this sometimes
+        		if(hand.get(i).getValue() != getId()) {
         			tempCardLocation.add(hand.get(i));
         		}
+        	}
+        	if(tempCardLocation.size() == 0) {
+        		return;
         	}
         	Random rand = new Random();
         	int n = rand.nextInt(tempCardLocation.size());
         	right.enQueue(tempCardLocation.get(n));
         	hand.remove(tempCardLocation.get(n));
+        }
+        
+        public ArrayList<Integer> displayHand(){
+			ArrayList<Integer> displayHand = new ArrayList<Integer>();
+        	for(int i =0;i<4;i++) {
+        		displayHand.add(this.hand.get(i).getValue());
+        	}
+        	return displayHand;
+        	
         }
     }
 }

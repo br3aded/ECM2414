@@ -12,8 +12,10 @@ public class CardGame {
 	private static ArrayList<CardDeck> CardDecks = new ArrayList<CardDeck>();
 	private static ArrayList<Thread> PlayerThreads = new ArrayList<Thread>();
 	private static Integer numberOfPlayers;
+	private static boolean stopThreads;
 	
-	public static void main(String[] args) throws IOException {		
+	public static void main(String[] args) throws IOException, InterruptedException {	
+		stopThreads = false;
 		Scanner myScan1 = new Scanner(System.in);  // Create a Scanner object
 	    System.out.println("Please enter the number of players:");//Asks for number of players
 	    numberOfPlayers = myScan1.nextInt();  // Read user input
@@ -34,6 +36,18 @@ public class CardGame {
 	    distributeCards(Cards);
 	    createThreads();
 	    startThreads();
+	    while(true) {
+	    	if(stopThreads == true) {
+	    		for(int i =0; i< PlayerThreads.size(); i++) {
+	    			System.out.println("Thread " + i + " is " +PlayerThreads.get(i).getState());
+	    		}
+	    		stopThreads();
+	    		break;
+	    	}
+	    }
+	    for(int i =0; i< PlayerThreads.size(); i++) {
+			System.out.println("Thread " + i + " hand is " + ((Players.get(i)).getHand()).displayHand());
+		}
 	    
 	    /*
 	    System.out.println(Players.get(Players.size()-1).getHand().getHandList());
@@ -49,23 +63,20 @@ public class CardGame {
 	            @Override
 	            public void run(){
 	            	int threadCounter = passThreadCounter;
-	                for (int j =1; j <=1000000; j++) { //maybe change this to a while loop
+	                for (int j =1; j <=2;) { //maybe change this to a while loop
 	                	synchronized(this){
 	                		((Players.get(threadCounter)).getHand()).drawCard();
 		                	((Players.get(threadCounter)).getHand()).pushCard();
 		                	System.out.println("Player " + threadCounter + " hand is:" + Players.get(threadCounter).getHand().getHandList() );
 		                	this.notifyAll();
 		                	if ((Players.get(threadCounter)).checkWin() == true) {
-	                			System.out.println("Player "+ threadCounter + " has won");
-	                			try {
-									stopThreads();
+		                		stopThreads = true;
+		                		try {
+									this.wait();
 								} catch (InterruptedException e) {
-									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}
-	                		
 	                		}
-		                	//will remove null when code change
 	                	}
 					}
 	            }
@@ -85,9 +96,9 @@ public class CardGame {
 	}
 	
 	private static void stopThreads() throws InterruptedException {
-		System.out.println("Stopped all threads");
-		for(int k = 0 ; k<PlayerThreads.size();k++) {
-			PlayerThreads.get(k).interrupt(); 
+		for(int i = 0 ; i<PlayerThreads.size();i++) {
+			System.out.println("Stopping Thread " + i);
+			PlayerThreads.get(i).interrupt(); 
 		}
 	}
 	
