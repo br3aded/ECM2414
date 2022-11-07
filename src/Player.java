@@ -1,4 +1,5 @@
 import java.util.ArrayList; 
+import java.util.Random;
 
 public class Player {
     private static int counter;
@@ -20,9 +21,14 @@ public class Player {
         return id;
     }
 
-    public void checkWin()
+    public boolean checkWin()
     {
-        // If win: stop all threads and end game.
+        for(int i=0; i<4;i++) {
+        	if(hand.getHandList().get(0).getValue() != id) {
+        		return false;
+        	}
+        }
+        return true;
     }
     
     public CardDeck getLeft()
@@ -57,17 +63,24 @@ public class Player {
 
         public void drawCard()
         {	
-        	if (hand.size() <= handSize) return;
+        	//if (hand.size() <= handSize) return;
         	
         	Card newCard = left.deQueue();
         	hand.add(newCard);
         }
         
-        //need to change this to pick a card from the hand
-        public void pushCard(Card card)
+        public void pushCard()
         {
-        	hand.remove(card);
-            right.enQueue(card);
+        	ArrayList<Card> tempCardLocation = new ArrayList<Card>();
+        	for(int i =0; i<this.hand.size(); i++) {
+        		if(this.hand.get(i).getValue() == getId()) {
+        			tempCardLocation.add(hand.get(i));
+        		}
+        	}
+        	Random rand = new Random();
+        	int n = rand.nextInt(tempCardLocation.size());
+        	right.enQueue(tempCardLocation.get(n));
+        	hand.remove(tempCardLocation.get(n));
         }
     }
 }

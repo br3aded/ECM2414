@@ -44,14 +44,29 @@ public class CardGame {
 	
 	private static void createThreads(){
 		for(int i=0; i<numberOfPlayers ;i++) {
+			final int passThreadCounter = i;
 			Thread thread = new Thread(new Runnable(){
 	            @Override
 	            public void run(){
-	                for (int i =1; i <=1000000; i++) { //maybe change this to a while loop
-	                	((Players.get(i)).getHand()).pushCard(null);
-						((Players.get(i)).getHand()).drawCard();
-	                    //will remove null when code changed
-	                    //(Players.get(i)).checkWin();
+	            	int threadCounter = passThreadCounter;
+	                for (int j =1; j <=1000000; j++) { //maybe change this to a while loop
+	                	synchronized(this){
+	                		((Players.get(threadCounter)).getHand()).drawCard();
+		                	((Players.get(threadCounter)).getHand()).pushCard();
+		                	System.out.println("Player " + threadCounter + " hand is:" + Players.get(threadCounter).getHand().getHandList() );
+		                	this.notifyAll();
+		                	if ((Players.get(threadCounter)).checkWin() == true) {
+	                			System.out.println("Player "+ threadCounter + " has won");
+	                			try {
+									stopThreads();
+								} catch (InterruptedException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+	                		
+	                		}
+		                	//will remove null when code change
+	                	}
 					}
 	            }
 	        });
@@ -67,6 +82,13 @@ public class CardGame {
 			}
 		}
 		
+	}
+	
+	private static void stopThreads() throws InterruptedException {
+		System.out.println("Stopped all threads");
+		for(int k = 0 ; k<PlayerThreads.size();k++) {
+			PlayerThreads.get(k).interrupt(); 
+		}
 	}
 	
 	//need to check for incorrect pack length and incorrect pack name
