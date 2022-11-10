@@ -12,10 +12,9 @@ public class CardGame {
 	private static ArrayList<CardDeck> CardDecks = new ArrayList<CardDeck>();
 	private static ArrayList<Thread> PlayerThreads = new ArrayList<Thread>();
 	private static Integer numberOfPlayers;
-	private static boolean stopThreads;
+	private static boolean exit;
 	
 	public static void main(String[] args) throws IOException, InterruptedException {	
-		stopThreads = false;
 		Scanner myScan1 = new Scanner(System.in);  // Create a Scanner object
 	    System.out.println("Please enter the number of players:");//Asks for number of players
 	    numberOfPlayers = myScan1.nextInt();  // Read user input
@@ -28,18 +27,7 @@ public class CardGame {
 	    distributeCards(Cards);
 	    createThreads();
 	    startThreads();
-	 
-	    
-	    
-	    while(true) {
-	    	if(stopThreads == true) {
-	    		for(int i =0; i< PlayerThreads.size(); i++) {
-	    			System.out.println("Thread " + i + " is " +PlayerThreads.get(i).getState());
-	    		}
-	    		stopThreads();
-	    		break;
-	    	}
-	    }
+
 	    for(int i =0; i< PlayerThreads.size(); i++) {
 			System.out.println("Thread " + i + " hand is " + ((Players.get(i)).getHand()).displayHand());
 		}
@@ -57,25 +45,26 @@ public class CardGame {
 			Thread thread1 = new Thread(new Runnable(){
 	            @Override
 	            public void run(){
-	            	int threadCounter = passThreadCounter;
-	                for (int j =1; j < 100000000; j++) { //maybe change this to a while loop
-	                	Players.get(threadCounter).getHand().drawCard();
-	                	Players.get(threadCounter).getHand().pushCard();
-	                	try {
-							PlayerThreads.get(threadCounter).sleep(1);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-	                	if ((Players.get(threadCounter)).checkWin() == true) {
-	                		stopThreads = true;
-	                		this.notifyAll();
-                		}
-                		
-	                	System.out.println("Player " + threadCounter + " hand is:" + Players.get(threadCounter).getHand().displayHand() );
-	                	System.out.println("Player" + threadCounter + "left deck is" + Players.get(threadCounter).getLeft().displayDeck());
-	                	System.out.println("Player" + threadCounter + "right deck is" + Players.get(threadCounter).getRight().displayDeck());
-					
+	            	while(!exit) {
+		            	int threadCounter = passThreadCounter;
+		                for (int j =1; j < 100000000; j++) { //maybe change this to a while loop
+		                	Players.get(threadCounter).getHand().drawCard();
+		                	Players.get(threadCounter).getHand().pushCard();
+		                	try {
+								PlayerThreads.get(threadCounter).sleep(1);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+		                	if ((Players.get(threadCounter)).checkWin() == true) {
+		                		exit = true;
+		                		this.notifyAll();
+	                		}
+	                		
+		                	System.out.println("Player " + threadCounter + " hand is:" + Players.get(threadCounter).getHand().displayHand() );
+		                	System.out.println("Player" + threadCounter + "left deck is" + Players.get(threadCounter).getLeft().displayDeck());
+		                	System.out.println("Player" + threadCounter + "right deck is" + Players.get(threadCounter).getRight().displayDeck());
+		                }
 					}
 	            }
 	            

@@ -23,18 +23,14 @@ public class Player {
 
     public synchronized boolean checkWin()
     {
-    	synchronized(this) {
-	        for(int i=0; i<4;i++) {
-	        	if(hand.getHandList().get(i) != null) {
-		        	if(hand.getHandList().get(i).getValue() == id) {
-		        		
-		        	} else {
+    	for(int i=0; i<4;i++) {
+    		if(hand.getHandList().get(i) != null) {
+		        if(hand.getHandList().get(i).getValue() != id) {
 		        		return false;
-		        	}
-	        	}else {return false;}
-	        }
-	        return true;
+		        }
+    		}
     	}
+    	return true;
     }
     
     public CardDeck getLeft()
