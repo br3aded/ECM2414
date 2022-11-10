@@ -64,7 +64,7 @@ public class Player {
         
         public void addToHand(Card card)
         {
-        	if (card == null) return;
+        	if (card == null || getHandList().size() >= 4) return;
         	
         	hand.add(card);
         }
@@ -72,7 +72,7 @@ public class Player {
         public synchronized void drawCard()
         {	
         	Card newCard = left.deQueue();
-		    hand.add(newCard);
+		    this.addToHand(newCard);
         }
         
         public synchronized void pushCard()
