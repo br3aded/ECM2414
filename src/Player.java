@@ -62,9 +62,10 @@ public class Player {
             return hand;
         }
         
-        public void addToHand(Card card)
+        public synchronized void addToHand(Card card) throws NullPointerException, ArrayIndexOutOfBoundsException
         {
-        	if (card == null || getHandList().size() >= 4) return;
+        	if (card == null) {throw new NullPointerException("Card value cannot be Null");}
+        	if (this.getHandList().size() >= 4) {throw new ArrayIndexOutOfBoundsException("Hand size cannot exceed 4.");}
         	
         	hand.add(card);
         }
