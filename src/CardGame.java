@@ -21,21 +21,16 @@ public class CardGame {
 	    numberOfPlayers = myScan1.nextInt();  // Read user input
 	    
 	    ArrayList<Card> Cards = packReader(numberOfPlayers);
+	    System.out.println(Cards.size());
 	    myScan1.close();
 	    generateDecks();
 	    generatePlayers();
-	    
-	    /*
-	    for (int x = 0; x < CardDecks.size(); x++)
-		{
-			System.out.println(CardDecks.get(x));
-		}
-	    
-	    System.out.println("|===========|");
-	    System.out.println(Players.get(3).getRight());*/
 	    distributeCards(Cards);
 	    createThreads();
 	    startThreads();
+	 
+	    
+	    
 	    while(true) {
 	    	if(stopThreads == true) {
 	    		for(int i =0; i< PlayerThreads.size(); i++) {
@@ -59,34 +54,38 @@ public class CardGame {
 	private static void createThreads(){
 		for(int i=0; i<numberOfPlayers ;i++) {
 			final int passThreadCounter = i;
-			Thread thread = new Thread(new Runnable(){
+			Thread thread1 = new Thread(new Runnable(){
 	            @Override
 	            public void run(){
 	            	int threadCounter = passThreadCounter;
-	                for (int j =1; j <=2;) { //maybe change this to a while loop
-	                	synchronized(this){
-	                		((Players.get(threadCounter)).getHand()).drawCard();
-		                	((Players.get(threadCounter)).getHand()).pushCard();
-		                	System.out.println("Player " + threadCounter + " hand is:" + Players.get(threadCounter).getHand().getHandList() );
-		                	this.notifyAll();
-		                	if ((Players.get(threadCounter)).checkWin() == true) {
-		                		stopThreads = true;
-		                		try {
-									this.wait();
-								} catch (InterruptedException e) {
-									e.printStackTrace();
-								}
-	                		}
-	                	}
+	                for (int j =1; j < 100000000; j++) { //maybe change this to a while loop
+	                	Players.get(threadCounter).getHand().drawCard();
+	                	Players.get(threadCounter).getHand().pushCard();
+	                	try {
+							PlayerThreads.get(threadCounter).sleep(1);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+	                	if ((Players.get(threadCounter)).checkWin() == true) {
+	                		stopThreads = true;
+	                		this.notifyAll();
+                		}
+                		
+	                	System.out.println("Player " + threadCounter + " hand is:" + Players.get(threadCounter).getHand().displayHand() );
+	                	System.out.println("Player" + threadCounter + "left deck is" + Players.get(threadCounter).getLeft().displayDeck());
+	                	System.out.println("Player" + threadCounter + "right deck is" + Players.get(threadCounter).getRight().displayDeck());
+					
 					}
 	            }
+	            
 	        });
-			PlayerThreads.add(thread);
-			}
+			PlayerThreads.add(thread1);
+		}
 	}
 	
 	private static void startThreads() {
-		for(int i=0; i<numberOfPlayers;i++) {
+		for(int i=0; i<PlayerThreads.size();i++) {
 			PlayerThreads.get(i).start();
 			if(PlayerThreads.get(i).isAlive() == true) {
 				System.out.println("Thread " + i + " is Running");
@@ -148,13 +147,13 @@ public class CardGame {
 	//generates the Player Objects , giving each player the CardDeck on the left and right in the topology
 	private static void generatePlayers()
 	{
-		for (int x = 0; x < numberOfPlayers; x++)
+		for (int x = 0; x < CardDecks.size(); x++)
 		{
-			if (x+1 < numberOfPlayers-1)
+			if (x < CardDecks.size()-1)
 			{
 				Players.add(createPlayer(CardDecks.get(x), CardDecks.get(x+1)));
 			}
-			else if (x+1 >= numberOfPlayers-1)
+			else if (x == CardDecks.size()-1)
 			{
 				Players.add(createPlayer(CardDecks.get(x), CardDecks.get(0)));
 			}
@@ -175,7 +174,9 @@ public class CardGame {
 				Cards.remove(0);
 			}
 		}
-		System.out.println(Cards.size());
+		for(int i=0; i<4; i++) {
+			System.out.println(CardDecks.get(i).getDeck().size());
+		}
 	}
 	
 	//not sure if we need anything below this
