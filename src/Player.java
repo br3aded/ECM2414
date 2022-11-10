@@ -24,11 +24,10 @@ public class Player {
     public synchronized boolean checkWin()
     {
     	for(int i=0; i<4;i++) {
-    		if(hand.getHandList().get(i) != null) {
-		        if(hand.getHandList().get(i).getValue() != id) {
-		        		return false;
+    		if((hand.getHandList().get(i) != null) && 
+    		   (hand.getHandList().get(i).getValue() != id)){
+		        	return false;
 		        }
-    		}
     	}
     	return true;
     }
