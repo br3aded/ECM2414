@@ -64,6 +64,8 @@ public class Player {
         
         public void addToHand(Card card)
         {
+        	if (card == null) return;
+        	
         	hand.add(card);
         }
 
