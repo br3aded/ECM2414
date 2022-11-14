@@ -2,17 +2,18 @@ import java.io.BufferedReader;
 import java.io.File;  // Import the File class
 import java.io.FileNotFoundException;  // Import this class to handle errors
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class CardGame {
 	
-	private static ArrayList<Player> Players = new ArrayList<Player>();
+	private volatile static ArrayList<Player> Players = new ArrayList<Player>();
 	private static ArrayList<CardDeck> CardDecks = new ArrayList<CardDeck>();
 	private static ArrayList<Thread> PlayerThreads = new ArrayList<Thread>();
 	private static Integer numberOfPlayers;
-	private static boolean exit;
+	private static boolean done;
 	
 	public static void main(String[] args) throws IOException, InterruptedException {	
 		Scanner myScan1 = new Scanner(System.in);  // Create a Scanner object
@@ -25,6 +26,7 @@ public class CardGame {
 	    generateDecks();
 	    generatePlayers();
 	    distributeCards(Cards);
+	    done = false;
 	    createThreads();
 	    startThreads();
 
@@ -42,34 +44,43 @@ public class CardGame {
 	private static void createThreads(){
 		for(int i=0; i<numberOfPlayers ;i++) {
 			final int passThreadCounter = i;
-			Thread thread1 = new Thread(new Runnable(){
+			Thread thread = new Thread(new Runnable(){
 	            @Override
 	            public void run(){
-	            	while(!exit) {
-		            	int threadCounter = passThreadCounter;
+	            	while(!done) {
+	            		int threadCounter = passThreadCounter;
+	            		System.out.println(threadCounter);
+		            	File outputFile = new File("player" + (threadCounter+1) + "_output.txt" );
+		            	try {
+		            		FileWriter writer = new FileWriter(outputFile,true);
+							writer.write("player " + (threadCounter +1) + " inital hand " + Players.get(threadCounter).getHand().displayHand());
+							writer.write("\r\n");
+							writer.close();
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
+		            	initalHand(threadCounter);
 		                for (int j =1; j < 100000000; j++) { //maybe change this to a while loop
-		                	Players.get(threadCounter).getHand().drawCard();
-		                	Players.get(threadCounter).getHand().pushCard();
 		                	try {
-								PlayerThreads.get(threadCounter).sleep(1);
-							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
+		                		FileWriter writer = new FileWriter(outputFile,true);
+		            			writer.write("player " + (threadCounter +1) + " draws a " + Players.get(threadCounter).getHand().drawCard().getValue() + " from deck " + Players.get(threadCounter).getLeft().getId());
+		            			writer.write("\r\n");
+		            			writer.write("player " + (threadCounter +1) + " discards a " + Players.get(threadCounter).getHand().pushCard().getValue() + " from deck " + Players.get(threadCounter).getRight().getId());
+		            			writer.write("\r\n");
+		            			writer.close();
+		            		} catch (IOException e) {
+		            			e.printStackTrace();
+		            		}
 		                	if ((Players.get(threadCounter)).checkWin() == true) {
-		                		exit = true;
-		                		this.notifyAll();
+		                		done = true;
+		                		System.out.println("Player " + (threadCounter+1) +" has won");
 	                		}
-	                		
-		                	System.out.println("Player " + threadCounter + " hand is:" + Players.get(threadCounter).getHand().displayHand() );
-		                	System.out.println("Player" + threadCounter + "left deck is" + Players.get(threadCounter).getLeft().displayDeck());
-		                	System.out.println("Player" + threadCounter + "right deck is" + Players.get(threadCounter).getRight().displayDeck());
 		                }
 					}
 	            }
 	            
 	        });
-			PlayerThreads.add(thread1);
+			PlayerThreads.add(thread);
 		}
 	}
 	
@@ -88,6 +99,10 @@ public class CardGame {
 			System.out.println("Stopping Thread " + i);
 			PlayerThreads.get(i).interrupt(); 
 		}
+	}
+	
+	private static ArrayList<Integer> initalHand(int player) {
+			return Players.get(player).getHand().displayHand();
 	}
 	
 	//need to check for incorrect pack length and incorrect pack name

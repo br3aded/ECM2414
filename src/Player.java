@@ -6,7 +6,7 @@ public class Player {
     private int id;
     private CardDeck left;
     private CardDeck right;
-    private PlayerHand hand;
+    private volatile PlayerHand hand;
 
     public Player(CardDeck left, CardDeck right)
     {
@@ -21,17 +21,21 @@ public class Player {
         return id;
     }
 
-    public synchronized boolean checkWin()
+    public boolean checkWin()
     {
-    	for(int i=0; i<4;i++) {
-    		if(hand.getHandList().get(i) != null) {
-		        if(hand.getHandList().get(i).getValue() != id) {
-		        		return false;
-		        }
-    		}
+    	synchronized(this) {
+	    	for(int i=0; i<4;i++) {
+	    		if(hand.getHandList().get(i) != null) {
+			        if(hand.getHandList().get(i).getValue() != id) {
+			        		return false;
+			        }
+	    		}
+	    	}
     	}
+    	System.out.println("Player has won");
     	return true;
     }
+    
     
     public CardDeck getLeft()
     {
@@ -61,32 +65,36 @@ public class Player {
         public synchronized void addToHand(Card card) throws NullPointerException, ArrayIndexOutOfBoundsException
         {
         	if (card == null) {throw new NullPointerException("Card value cannot be Null");}
-        	if (this.getHandList().size() >= 4) {throw new ArrayIndexOutOfBoundsException("Hand size cannot exceed 4.");}
+        	//if (this.getHandList().size() >= 4) {throw new ArrayIndexOutOfBoundsException("Hand size cannot exceed 4.");}
         	
         	hand.add(card);
         }
 
-        public synchronized void drawCard()
+        public synchronized Card drawCard()
         {	
         	Card newCard = left.deQueue();
 		    this.addToHand(newCard);
+			return newCard;
         }
         
-        public synchronized void pushCard()
+        public Card pushCard()
         {
-	        ArrayList<Card> tempCardLocation = new ArrayList<Card>();
-	        for(int i =0; i<this.hand.size(); i++) {
-	        	if(this.hand.get(i) != null) {
-		        	if(this.hand.get(i).getValue() != getId()) {
-		        		tempCardLocation.add(hand.get(i));
+        	synchronized(this){
+		        ArrayList<Card> tempCardLocation = new ArrayList<Card>();
+		        for(int i =0; i<this.hand.size(); i++) {
+		        	if(this.hand.get(i) != null) {
+			        	if(this.hand.get(i).getValue() != getId()) {
+			        		tempCardLocation.add(hand.get(i));
+			        	}
 		        	}
-	        	}
-	        }
-	        Random rand = new Random();
-	        int n = rand.nextInt(tempCardLocation.size());
-	        System.out.println(tempCardLocation.get(n));
-	        right.enQueue(tempCardLocation.get(n));
-	        hand.remove(tempCardLocation.get(n));
+		        }
+		        Random rand = new Random();
+		        int n = rand.nextInt(tempCardLocation.size());
+		        System.out.println(tempCardLocation.get(n));
+		        right.enQueue(tempCardLocation.get(n));
+		        hand.remove(tempCardLocation.get(n));
+		        return tempCardLocation.get(n);
+        	}
         }
         
         public synchronized ArrayList<Integer> displayHand(){

@@ -6,7 +6,7 @@ public class CardDeck
 {
     private static int counter;
     private int id;
-    private ArrayList<Card> deck = new ArrayList<Card>();
+    private volatile ArrayList<Card> deck = new ArrayList<Card>();
 
     public CardDeck ()
     {
