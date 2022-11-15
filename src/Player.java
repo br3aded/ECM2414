@@ -87,7 +87,6 @@ public class Player {
 		        }
 		        Random rand = new Random();
 		        int n = rand.nextInt(tempCardLocation.size());
-		        System.out.println(tempCardLocation.get(n));
 		        right.enQueue(tempCardLocation.get(n));
 		        hand.remove(tempCardLocation.get(n));
 		        return tempCardLocation.get(n);

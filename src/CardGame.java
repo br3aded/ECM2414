@@ -14,6 +14,8 @@ public class CardGame {
 	private static ArrayList<Thread> PlayerThreads = new ArrayList<Thread>();
 	private static Integer numberOfPlayers;
 	private static boolean done;
+	private static Integer winner;
+	private static Integer threadsFinished;
 	
 	public static void main(String[] args) throws IOException, InterruptedException {	
 		Scanner myScan1 = new Scanner(System.in);  // Create a Scanner object
@@ -21,24 +23,23 @@ public class CardGame {
 	    numberOfPlayers = myScan1.nextInt();  // Read user input
 	    
 	    ArrayList<Card> Cards = packReader(numberOfPlayers);
-	    System.out.println(Cards.size());
 	    myScan1.close();
 	    generateDecks();
 	    generatePlayers();
 	    distributeCards(Cards);
 	    done = false;
+	    threadsFinished = 0;
 	    createThreads();
 	    startThreads();
 	}
 	
-	private static void createThreads(){
+	private static void createThreads() throws IOException{
 		for(int i=0; i<numberOfPlayers ;i++) {
 			final int passThreadCounter = i;
 			Thread thread = new Thread(new Runnable(){
 	            @Override
 	            public void run(){
 	            	int threadCounter = passThreadCounter;
-	            	System.out.println(threadCounter);
 		            File outputFile = new File("player" + (threadCounter+1) + "_output.txt" );
 		            try {
 		            	FileWriter writer = new FileWriter(outputFile,true);
@@ -48,23 +49,51 @@ public class CardGame {
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					}
-		            initalHand(threadCounter);
+		            //does an initial check to see if anyone has won
+		            if ((Players.get(threadCounter)).checkWin() == true) {
+	                	done = true;
+	                	System.out.println("Player " + (threadCounter+1) +" has won");
+                	}
+		            
 		            while(!done) { //maybe change this to a while loop
-		                try {
-		                	FileWriter writer = new FileWriter(outputFile,true);
-		            		writer.write("player " + (threadCounter +1) + " draws a " + Players.get(threadCounter).getHand().drawCard().getValue() + " from deck " + Players.get(threadCounter).getLeft().getId());
-		            		writer.write("\r\n");
-		            		writer.write("player " + (threadCounter +1) + " discards a " + Players.get(threadCounter).getHand().pushCard().getValue() + " from deck " + Players.get(threadCounter).getRight().getId());
-		            		writer.write("\r\n");
-		            		writer.close();
-		            	} catch (IOException e) {
-		            		e.printStackTrace();
-		            	}
-		                if ((Players.get(threadCounter)).checkWin() == true) {
-		                	done = true;
-		                	System.out.println("Player " + (threadCounter+1) +" has won");
-	                	}
+		            	try{
+		            		FileWriter writer = new FileWriter(outputFile,true);
+				            writer.write("player " + (threadCounter +1) + " draws a " + Players.get(threadCounter).getHand().drawCard().getValue() + " from deck " + Players.get(threadCounter).getLeft().getId());
+				            writer.write("\r\n");
+				            writer.write("player " + (threadCounter +1) + " discards a " + Players.get(threadCounter).getHand().pushCard().getValue() + " to deck " + Players.get(threadCounter).getRight().getId());
+				            writer.write("\r\n");
+				            writer.close();
+				         } catch (IOException e) {
+				            e.printStackTrace();
+				         } 
+				         if ((Players.get(threadCounter)).checkWin() == true) {
+				        	 done = true;
+				             winner = threadCounter + 1;
+				             System.out.println("Player " + (threadCounter+1) +" has won");
+			            }
 		            }
+		            
+		            try {
+						FileWriter writer = new FileWriter(outputFile,true);
+						writer.write("player " + winner + " has won");
+						writer.write("\r\n");
+						writer.write("player " + (threadCounter + 1) + " exits");
+						writer.write("\r\n");
+						writer.write("player " + (threadCounter +1) + " final hand " + Players.get(threadCounter).getHand().displayHand());
+						writer.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+		            
+		            if(threadsFinished == PlayerThreads.size()-1) {
+		            	try {
+							deckOutput();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+		            }else {threadsFinished++ ;}
 	            }
 	            
 	        });
@@ -75,15 +104,9 @@ public class CardGame {
 	private static void startThreads() {
 		for(int i=0; i<PlayerThreads.size();i++) {
 			PlayerThreads.get(i).start();
-			if(PlayerThreads.get(i).isAlive() == true) {
-				System.out.println("Thread " + i + " is Running");
-			}
 		}
 		
-	}
-	
-	private static ArrayList<Integer> initalHand(int player) {
-			return Players.get(player).getHand().displayHand();
+		
 	}
 	
 	//need to check for incorrect pack length and incorrect pack name
@@ -159,11 +182,17 @@ public class CardGame {
 				Cards.remove(0);
 			}
 		}
-		for(int i=0; i<4; i++) {
-			System.out.println(CardDecks.get(i).getDeck().size());
+	}
+	
+	private static void deckOutput() throws IOException {
+		for(int i = 0 ; i< CardDecks.size(); i++) {
+			File outputFile = new File("deck"+(i+1)+"_output.txt");
+			FileWriter writer = new FileWriter(outputFile,true);
+			writer.write("deck " + (i+1) + " contents: " + CardDecks.get(i).displayDeck());
+			writer.close();
 		}
 	}
-
+	
     private static CardDeck createCardDeck()
     {
         CardDeck cardDeck = new CardDeck();
