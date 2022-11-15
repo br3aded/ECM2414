@@ -21,18 +21,15 @@ public class Player {
         return id;
     }
 
-    public boolean checkWin()
+    public synchronized boolean checkWin()
     {
-    	synchronized(this) {
-	    	for(int i=0; i<4;i++) {
-	    		if(hand.getHandList().get(i) != null) {
-			        if(hand.getHandList().get(i).getValue() != id) {
-			        		return false;
-			        }
-	    		}
+	    for(int i=0; i<4;i++) {
+	    	if(hand.getHandList().get(i) != null) {
+			       if(hand.getHandList().get(i).getValue() != id) {
+			        	return false;
+			       }
 	    	}
-    	}
-    	System.out.println("Player has won");
+	    }
     	return true;
     }
     
