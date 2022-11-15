@@ -29,16 +29,6 @@ public class CardGame {
 	    done = false;
 	    createThreads();
 	    startThreads();
-
-	    for(int i =0; i< PlayerThreads.size(); i++) {
-			System.out.println("Thread " + i + " hand is " + ((Players.get(i)).getHand()).displayHand());
-		}
-	    
-	    /*
-	    System.out.println(Players.get(Players.size()-1).getHand().getHandList());
-	    System.out.println(CardDecks.get(CardDecks.size()-1).getDeck());
-	    System.out.println(PlayerThreads);
-	    System.out.println(PlayerThreads.size());*/
 	}
 	
 	private static void createThreads(){
@@ -47,36 +37,34 @@ public class CardGame {
 			Thread thread = new Thread(new Runnable(){
 	            @Override
 	            public void run(){
-	            	while(!done) {
-	            		int threadCounter = passThreadCounter;
-	            		System.out.println(threadCounter);
-		            	File outputFile = new File("player" + (threadCounter+1) + "_output.txt" );
-		            	try {
-		            		FileWriter writer = new FileWriter(outputFile,true);
-							writer.write("player " + (threadCounter +1) + " inital hand " + Players.get(threadCounter).getHand().displayHand());
-							writer.write("\r\n");
-							writer.close();
-						} catch (IOException e1) {
-							e1.printStackTrace();
-						}
-		            	initalHand(threadCounter);
-		                for (int j =1; j < 100000000; j++) { //maybe change this to a while loop
-		                	try {
-		                		FileWriter writer = new FileWriter(outputFile,true);
-		            			writer.write("player " + (threadCounter +1) + " draws a " + Players.get(threadCounter).getHand().drawCard().getValue() + " from deck " + Players.get(threadCounter).getLeft().getId());
-		            			writer.write("\r\n");
-		            			writer.write("player " + (threadCounter +1) + " discards a " + Players.get(threadCounter).getHand().pushCard().getValue() + " from deck " + Players.get(threadCounter).getRight().getId());
-		            			writer.write("\r\n");
-		            			writer.close();
-		            		} catch (IOException e) {
-		            			e.printStackTrace();
-		            		}
-		                	if ((Players.get(threadCounter)).checkWin() == true) {
-		                		done = true;
-		                		System.out.println("Player " + (threadCounter+1) +" has won");
-	                		}
-		                }
+	            	int threadCounter = passThreadCounter;
+	            	System.out.println(threadCounter);
+		            File outputFile = new File("player" + (threadCounter+1) + "_output.txt" );
+		            try {
+		            	FileWriter writer = new FileWriter(outputFile,true);
+						writer.write("player " + (threadCounter +1) + " inital hand " + Players.get(threadCounter).getHand().displayHand());
+						writer.write("\r\n");
+						writer.close();
+					} catch (IOException e1) {
+						e1.printStackTrace();
 					}
+		            initalHand(threadCounter);
+		            while(!done) { //maybe change this to a while loop
+		                try {
+		                	FileWriter writer = new FileWriter(outputFile,true);
+		            		writer.write("player " + (threadCounter +1) + " draws a " + Players.get(threadCounter).getHand().drawCard().getValue() + " from deck " + Players.get(threadCounter).getLeft().getId());
+		            		writer.write("\r\n");
+		            		writer.write("player " + (threadCounter +1) + " discards a " + Players.get(threadCounter).getHand().pushCard().getValue() + " from deck " + Players.get(threadCounter).getRight().getId());
+		            		writer.write("\r\n");
+		            		writer.close();
+		            	} catch (IOException e) {
+		            		e.printStackTrace();
+		            	}
+		                if ((Players.get(threadCounter)).checkWin() == true) {
+		                	done = true;
+		                	System.out.println("Player " + (threadCounter+1) +" has won");
+	                	}
+		            }
 	            }
 	            
 	        });
@@ -92,13 +80,6 @@ public class CardGame {
 			}
 		}
 		
-	}
-	
-	private static void stopThreads() throws InterruptedException {
-		for(int i = 0 ; i<PlayerThreads.size();i++) {
-			System.out.println("Stopping Thread " + i);
-			PlayerThreads.get(i).interrupt(); 
-		}
 	}
 	
 	private static ArrayList<Integer> initalHand(int player) {
@@ -182,13 +163,6 @@ public class CardGame {
 			System.out.println(CardDecks.get(i).getDeck().size());
 		}
 	}
-	
-	//not sure if we need anything below this
-    private Card createCard(int value)
-    {
-        Card card = new Card(value);
-        return card;
-    }
 
     private static CardDeck createCardDeck()
     {
