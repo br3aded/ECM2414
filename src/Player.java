@@ -74,23 +74,21 @@ public class Player {
 			return newCard;
         }
         
-        public Card pushCard()
+        public synchronized Card pushCard()
         {
-        	synchronized(this){
-		        ArrayList<Card> tempCardLocation = new ArrayList<Card>();
-		        for(int i =0; i<this.hand.size(); i++) {
-		        	if(this.hand.get(i) != null) {
-			        	if(this.hand.get(i).getValue() != getId()) {
-			        		tempCardLocation.add(hand.get(i));
-			        	}
-		        	}
+        	ArrayList<Card> tempCardLocation = new ArrayList<Card>();
+		    for(int i =0; i<this.hand.size(); i++) {
+		        if(this.hand.get(i) != null) {
+			        if(this.hand.get(i).getValue() != getId()) {
+			        	tempCardLocation.add(hand.get(i));
+			        }
 		        }
-		        Random rand = new Random();
-		        int n = rand.nextInt(tempCardLocation.size());
-		        right.enQueue(tempCardLocation.get(n));
-		        hand.remove(tempCardLocation.get(n));
-		        return tempCardLocation.get(n);
-        	}
+		    }
+		    Random rand = new Random();
+		    int n = rand.nextInt(tempCardLocation.size());
+		    right.enQueue(tempCardLocation.get(n));
+		    hand.remove(tempCardLocation.get(n));
+		    return tempCardLocation.get(n);
         }
         
         public synchronized ArrayList<Integer> displayHand(){
