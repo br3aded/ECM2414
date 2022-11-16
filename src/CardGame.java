@@ -16,6 +16,7 @@ public class CardGame {
 	private static boolean done;
 	private static Integer winner;
 	private static Integer threadsFinished;
+	private static Integer threadsWaiting;
 	
 	public static void main(String[] args) throws IOException, InterruptedException {	
 		Scanner myScan1 = new Scanner(System.in);  // Create a Scanner object
@@ -27,13 +28,15 @@ public class CardGame {
 	    generateDecks();
 	    generatePlayers();
 	    distributeCards(Cards);
-	    done = false;
-	    threadsFinished = 0;
 	    createThreads();
 	    startThreads();
 	}
 	
 	private static void createThreads() throws IOException{
+		
+		done = false;
+	    threadsFinished = 0;
+		threadsWaiting = 0;
 		for(int i=0; i<numberOfPlayers ;i++) {
 			final int passThreadCounter = i;
 			Thread thread = new Thread(new Runnable(){
@@ -50,12 +53,13 @@ public class CardGame {
 						e1.printStackTrace();
 					}
 		            //does an initial check to see if anyone has won
-		            if ((Players.get(threadCounter)).checkWin() == true) {
+		            if (Players.get(threadCounter).checkWin() == true && winner == null) {
+		            	winner = threadCounter + 1;
 	                	done = true;
 	                	System.out.println("Player " + (threadCounter+1) +" has won");
                 	}
 		            
-		            while(!done) { //maybe change this to a while loop
+		            while(!done) { 
 		            	try{
 		            		FileWriter writer = new FileWriter(outputFile,true);
 				            writer.write("player " + (threadCounter +1) + " draws a " + Players.get(threadCounter).getHand().drawCard().getValue() + " from deck " + Players.get(threadCounter).getLeft().getId());
@@ -71,6 +75,13 @@ public class CardGame {
 				             winner = threadCounter + 1;
 				             System.out.println("Player " + (threadCounter+1) +" has won");
 			            }
+				        try {
+							PlayerThreads.get(threadCounter);
+							Thread.sleep(10);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 		            }
 		            
 		            try {
