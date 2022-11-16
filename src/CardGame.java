@@ -148,22 +148,26 @@ public class CardGame {
 	}
 	
 	private static ArrayList<Card> packReader(Integer numberOfPlayers) throws IOException{
+		//creates a boolean called exists that is used to make sure the file exists
     	boolean exists = false;
     	Scanner myScan2 = new Scanner(System.in); // Create a Scanner object
     	File f = null;
-		//reads file name
+    	//this while loop will run until a valid file is inputed
     	while(!exists) {
 		    System.out.println("Please enter the file Name:");
 		    String fileName = myScan2.nextLine();  // Read user input
 		    //reads file
 		    f = new File(fileName);
+		    //if condition to check the file exists
 		    if(f.exists() == true) {
+		    	//if file exists breaks the while loop
 		    	exists = true;
 		    }else {
 		    	System.out.println("This is not a valid file");
 		    }
 		    
     	}
+    	//creates a file reader
 	    FileReader fr = new FileReader(f);
 	    BufferedReader reader = new BufferedReader(fr);
 	    
@@ -180,11 +184,13 @@ public class CardGame {
 	    //checks to see if the pack is the correct length
 	    if(Cards.size() != numberOfPlayers *8) {
 	    	System.out.println("Incorrect Pack Length");
+	    	//this closes the open scanner and reader
 	    	myScan2.close();
 	    	reader.close();
+	    	//this will run the packReader function again if the pack size isn't valid
 	    	packReader(numberOfPlayers);
 	    }
-	    
+	    //this closes the open scanner and reader and returns the Cards ArrayList
 	    myScan2.close();
 	    reader.close();
 	    return Cards;
@@ -231,6 +237,7 @@ public class CardGame {
 		}
 	}
 	
+	//this generates a deck output file for all decks when the game has ended
 	private static void deckOutput() throws IOException {
 		for(int i = 0 ; i< CardDecks.size(); i++) {
 			File outputFile = new File("deck"+(i+1)+"_output.txt");
@@ -240,12 +247,14 @@ public class CardGame {
 		}
 	}
 	
+	//used to instantiate CardDeck Objects
     private static CardDeck createCardDeck()
     {
         CardDeck cardDeck = new CardDeck();
         return cardDeck;
     }
-
+    
+    //used to instantiate Player Objects
     private static Player createPlayer(CardDeck left, CardDeck right)
     {
         Player player = new Player(left, right);
