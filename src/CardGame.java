@@ -16,7 +16,6 @@ public class CardGame {
 	private static boolean done;
 	private static Integer winner;
 	private static Integer threadsFinished;
-	private static Integer threadsWaiting;
 	
 	public static void main(String[] args) throws IOException, InterruptedException {	
 		Scanner myScan1 = new Scanner(System.in);  // Create a Scanner object
@@ -96,7 +95,7 @@ public class CardGame {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-		            
+		          
 		            if(threadsFinished == PlayerThreads.size()-1) {
 		            	try {
 							deckOutput();
@@ -121,6 +120,7 @@ public class CardGame {
 	}
 	
 	//need to check for incorrect pack length and incorrect pack name
+	//add if pack length is incorrect it starts it again
 	private static ArrayList<Card> packReader(Integer numberOfPlayers) throws IOException{
     	
 		//reads file name
