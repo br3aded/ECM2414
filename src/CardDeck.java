@@ -26,7 +26,7 @@ public class CardDeck
     }
     
     //adds a card to the end of the array list
-    public void enQueue(Card card)
+    public synchronized void enQueue(Card card)
     {
         deck.add(card);
     }
