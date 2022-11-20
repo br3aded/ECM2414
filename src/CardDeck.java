@@ -32,12 +32,14 @@ public class CardDeck
     }
     
  // Removes and returns the head of the list
-    public synchronized Card deQueue()
+    public synchronized Card deQueue() throws NullPointerException
     {
-    	Card tempCard = deck.get(0);
+    	if (deck.size() == 0) throw new NullPointerException("Deck contains no cards.");
+    	
+		Card tempCard = deck.get(0);
     	deck.remove(0);
-        return tempCard; 
-    }
+        return tempCard;
+}
     
     //returns an array list of the decks card values instead of card objects
     public synchronized ArrayList<Integer> displayDeck(){

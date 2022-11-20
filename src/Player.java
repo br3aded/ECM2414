@@ -67,7 +67,7 @@ public class Player {
         }
         
         //adds a given card to the player hand
-        public synchronized void addToHand(Card card) throws NullPointerException, ArrayIndexOutOfBoundsException
+        public synchronized void addToHand(Card card) throws NullPointerException
         {
         	if (card == null) {throw new NullPointerException("Card value cannot be Null");}
         	hand.add(card);
@@ -82,8 +82,10 @@ public class Player {
         }
         
         //picks a card from the player hand that isn't a preferred value , removes from player hand and adds to back of the right card deck and returns the card
-        public synchronized Card pushCard()
+        public synchronized Card pushCard() throws ArrayIndexOutOfBoundsException
         {
+        	if (hand.size() == 0) throw new ArrayIndexOutOfBoundsException("Hand must contain a card.");
+        	
         	//creates a temporary card ArrayList with cards from the player hand that aren't the preferred value
         	ArrayList<Card> tempCardLocation = new ArrayList<Card>();
 		    for(int i =0; i<this.hand.size(); i++) {
@@ -93,6 +95,7 @@ public class Player {
 			        }
 		        }
 		    }
+		    
 		    //uses a random number generator  
 		    Random rand = new Random();
 		    int n = rand.nextInt(tempCardLocation.size());
