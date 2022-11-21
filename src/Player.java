@@ -114,7 +114,6 @@ public class Player {
         		displayHand.add(this.hand.get(i).getValue());
         	}
         	return displayHand;
-        	
         }
     }
 }

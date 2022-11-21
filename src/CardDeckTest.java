@@ -1,5 +1,7 @@
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +26,7 @@ class CardDeckTest {
 	void testDeQueueNullPointer()
 	{
 		// DrawCard throws exception and then recurses
-		assertThrows(NullPointerException.class, () -> {	
+		assertThrows(NullPointerException.class, () -> {
     		deck.deQueue();
 	    });
 	}
@@ -32,6 +34,13 @@ class CardDeckTest {
 	@Test
 	void testDisplayDeck()
 	{
-		deck.displayDeck();
+		int[] expected = {1,1,1,1};
+		
+		for(int i =0;i<4;i++)
+		{
+			deck.enQueue(new Card(1));
+    	}
+		
+		assertArrayEquals( deck.displayDeck().stream().mapToInt(i -> i).toArray(), expected);
 	}
 }
