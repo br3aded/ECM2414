@@ -39,6 +39,16 @@ public class CardGame {
 	    startThreads();
 	}
 	
+	public ArrayList<Player> getPlayers()
+	{
+		return Players;
+	}
+	
+	public ArrayList<CardDeck> getCardDecks()
+	{
+		return CardDecks;
+	}
+	
 	private static void createThreads() throws IOException{
 		//Initialised some values that are used within the threads
 		done = false;
@@ -260,5 +270,4 @@ public class CardGame {
         Player player = new Player(left, right);
         return player;
     }
-
 }
