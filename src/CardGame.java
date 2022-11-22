@@ -49,6 +49,21 @@ public class CardGame {
 		return CardDecks;
 	}
 	
+	public void clearPlayers()
+	{
+		Players.clear();
+	}
+	
+	public void clearDecks()
+	{
+		CardDecks.clear();
+	}
+	
+	public void setNumberOfPlayers(int num)
+	{
+		numberOfPlayers = num;
+	}
+	
 	private static void createThreads() throws IOException{
 		//Initialised some values that are used within the threads
 		done = false;
