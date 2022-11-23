@@ -2,14 +2,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 
-class PlayerTest {
+public class PlayerTest {
 
-	Player player;
-	@BeforeEach
-	void setupTest()
+	public Player player;
+	@Before
+	public void setupTest()
 	{
 		CardDeck left = new CardDeck();
 		CardDeck right = new CardDeck();
@@ -27,7 +27,7 @@ class PlayerTest {
 	}
 	
 	@Test
-	void testCheckWinValid()
+	public void testCheckWinValid()
 	{
 		// ID == 1
 		for(int i =0;i<4;i++)
@@ -39,7 +39,7 @@ class PlayerTest {
 	}
 	
 	@Test
-	void testCheckWinInvalid()
+	public void testCheckWinInvalid()
 	{
 		for(int i =0;i<3;i++)
 		{
@@ -52,7 +52,7 @@ class PlayerTest {
 	}
 
 	@Test
-	void testAddCardValid()
+	public void testAddCardValid()
 	{
 		ArrayList<Card> hand = player.getHand().getHandList();
 		Card card = new Card(1);
@@ -63,7 +63,7 @@ class PlayerTest {
 	}
 
 	@Test
-	void testAddCardNull()
+	public void testAddCardNull()
 	{
 		assertThrows(NullPointerException.class, () -> {
     		player.getHand().addToHand(null);
@@ -71,7 +71,7 @@ class PlayerTest {
 	}
 	
 	@Test 
-	void testDrawCardValid()
+	public void testDrawCardValid()
 	{
 		player.getHand().drawCard();
 		assertTrue((player.getLeft().getDeck().size()) == 3 && 
@@ -94,14 +94,14 @@ class PlayerTest {
 	}*/
 	
 	@Test
-	void testPushCardValid()
+	public void testPushCardValid()
 	{
 		player.getHand().drawCard();
 		assertTrue(player.getHand().pushCard() == player.getRight().getDeck().get(player.getRight().getDeck().size()-1));
 	}
 	
 	@Test
-	void testPushCardPreferredValue()
+	public void testPushCardPreferredValue()
 	{
 		int preferred = player.getId();
 		player.getHand().addToHand(new Card(preferred));
@@ -117,7 +117,7 @@ class PlayerTest {
 	}
 	
 	@Test
-	void testPushCardHandSizeIsZero()
+	public void testPushCardHandSizeIsZero()
 	{
 		assertThrows(ArrayIndexOutOfBoundsException.class, () -> {
 			player.getHand().pushCard();
@@ -125,15 +125,19 @@ class PlayerTest {
 	}
 	
 	@Test
-	void testDisplayHand()
+	public void testDisplayHand()
 	{
 		int[] expected = {1,1,1,1};
+		
+		// Test hand size is zero
+		assertTrue(player.getHand().displayHand().size() == 0);
 		
 		for(int i =0;i<4;i++)
 		{
 			player.getHand().addToHand(new Card(1));
     	}
 		
-		assertArrayEquals( player.getHand().displayHand().stream().mapToInt(i -> i).toArray(), expected);
+		//
+		assertArrayEquals(player.getHand().displayHand().stream().mapToInt(i -> i).toArray(), expected);
 	}
 }

@@ -39,7 +39,7 @@ public class CardDeck
 		Card tempCard = deck.get(0);
     	deck.remove(0);
         return tempCard;
-}
+    }
     
     //returns an array list of the decks card values instead of card objects
     public synchronized ArrayList<Integer> displayDeck(){

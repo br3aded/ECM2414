@@ -1,21 +1,26 @@
 import static org.junit.jupiter.api.Assertions.*;
+import junit.runner.Version;
 
 import java.util.ArrayList;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 
-class CardDeckTest {
+public class CardDeckTest {
 
 	private CardDeck deck;
-	@BeforeEach
-	void setupTest()
+	@Before
+	public void setupTest()
 	{
 		deck = new CardDeck();
+		
+		
+
+		System.out.println("JUnit version is: " + Version.id());
 	}
 	
 	@Test
-	void testDeQueueValid()
+	public void testDeQueueValid()
 	{
 		Card card = new Card(1);
 		deck.enQueue(card);
@@ -23,7 +28,7 @@ class CardDeckTest {
 	}
 	
 	@Test
-	void testDeQueueNullPointer()
+	public void testDeQueueNoCardsInDeck()
 	{
 		// DrawCard throws exception and then recurses
 		assertThrows(NullPointerException.class, () -> {
@@ -32,7 +37,7 @@ class CardDeckTest {
 	}
 	
 	@Test
-	void testDisplayDeck()
+	public void testDisplayDeck()
 	{
 		int[] expected = {1,1,1,1};
 		

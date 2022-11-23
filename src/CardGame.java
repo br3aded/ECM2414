@@ -49,6 +49,11 @@ public class CardGame {
 		return CardDecks;
 	}
 	
+	public ArrayList<Thread> getPlayerThreads()
+	{
+		return PlayerThreads;
+	}
+	
 	public void clearPlayers()
 	{
 		Players.clear();
@@ -168,8 +173,6 @@ public class CardGame {
 		for(int i=0; i<PlayerThreads.size();i++) {
 			PlayerThreads.get(i).start();
 		}
-		
-		
 	}
 	
 	private static ArrayList<Card> packReader(Integer numberOfPlayers) throws IOException{
@@ -190,8 +193,8 @@ public class CardGame {
 		    }else {
 		    	System.out.println("This is not a valid file");
 		    }
-		    
     	}
+    	
     	//creates a file reader
 	    FileReader fr = new FileReader(f);
 	    BufferedReader reader = new BufferedReader(fr);
@@ -202,8 +205,21 @@ public class CardGame {
 	    //reads lines and adds cards objects to the ArrayList
 	    String line;
 	    while((line = reader.readLine()) != null) {
-	    	Card card = new Card(Integer.parseInt(line));
-	    	Cards.add(card);
+	    	if (Integer.parseInt(line) < 0) 
+    		{
+    			System.out.println("Pack cannot contain negative values.");
+    			//this closes the open scanner and reader
+    	    	myScan2.close();
+    	    	reader.close();
+    	    	//this will run the packReader function again if the pack size isn't valid
+    	    	packReader(numberOfPlayers);
+    		}
+    		
+	    	else if (Integer.parseInt(line) >= 0)
+	    	{
+	    		Card card = new Card(Integer.parseInt(line));
+		    	Cards.add(card);
+	    	}    	
 	    }
 	    
 	    //checks to see if the pack is the correct length

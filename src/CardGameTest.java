@@ -1,24 +1,22 @@
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.BeforeClass;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-import java.awt.List;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
-class CardGameTest {
+public class CardGameTest {
 	
 	CardGame game;
 	int numberOfPlayers = 4;
 	ArrayList<Card> cards = new ArrayList<Card>();
 	
-	@BeforeEach
-	void setupTest() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException
-	{
+	@Before
+	public void setupTest() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException
+	{		
 		game = new CardGame();
 		
 		game.setNumberOfPlayers(numberOfPlayers);
@@ -29,14 +27,10 @@ class CardGameTest {
 		{
 			cards.add(new Card(x));
 		}
-		
-		System.out.println(game);
-		System.out.println(game.getCardDecks().size());
-		System.out.println(game.getPlayers().size());		
 	}
 	
-	@AfterEach
-	void cleanupTest()
+	@After
+	public void tearDown()
 	{
 		game.clearDecks();
 		game.clearPlayers();
@@ -53,26 +47,26 @@ class CardGameTest {
 	
 	
 	@Test
-	void testGeneratePlayers()
+	public void testGeneratePlayers()
 	{
 		assertEquals(game.getPlayers().size(), numberOfPlayers);
 	}
 	
 	@Test
-	void testGeneratePlayersMaxIndex()
+	public void testGeneratePlayersMaxIndex()
 	{
 		assertSame(game.getPlayers().get(numberOfPlayers-1).getRight(), game.getCardDecks().get(0));
 		assertSame(game.getPlayers().get(numberOfPlayers-1).getLeft(), game.getCardDecks().get(numberOfPlayers-1));
 	}
 	
 	@Test
-	void testGenerateDecks()
+	public void testGenerateDecks()
 	{
 		assertEquals(game.getCardDecks().size(), numberOfPlayers);
 	}
 	
 	@Test
-	void testDistributeCardsSize() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException
+	public void testDistributeCardsSize() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException
 	{	
 		Method method = CardGame.class.getDeclaredMethod("distributeCards", ArrayList.class);
 
@@ -86,5 +80,31 @@ class CardGameTest {
 		
 	}
 	
+	// TODO AUTOMATICALLY TEST ALL FILES 
+	@Test
+	public void testPackReader() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
+	{
+		Method method = CardGame.class.getDeclaredMethod("packReader", Integer.class);
+
+		method.setAccessible(true);
+		
+		Object result = method.invoke(method, numberOfPlayers);
+		
+		ArrayList<Card> tempCards = (ArrayList<Card>) result;
+		
+		assertEquals(tempCards.size(), 32);
+	}
+
+	@Test
+	public void testPackReaderNegative() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException
+	{
+		
+	}
 	
+	@Test
+	public void testCreateThreads() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException
+	{
+		getMethodByName("createThreads").invoke(game);
+		assertEquals(game.getPlayerThreads().size(), 4);
+	}
 }
