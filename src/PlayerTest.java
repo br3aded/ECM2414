@@ -110,8 +110,6 @@ public class PlayerTest {
 		player.getHand().addToHand(new Card(preferred+1));
 		player.getHand().pushCard();
 		
-		System.out.println(player.getHand().getHandList().get(0).getValue());
-		
 		// Assert true if remaining card is preferred
 		assertEquals(player.getHand().getHandList().get(0).getValue(), preferred);
 	}

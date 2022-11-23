@@ -13,10 +13,6 @@ public class CardDeckTest {
 	public void setupTest()
 	{
 		deck = new CardDeck();
-		
-		
-
-		System.out.println("JUnit version is: " + Version.id());
 	}
 	
 	@Test

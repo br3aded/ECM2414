@@ -4,9 +4,15 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class CardGameTest {
 	
@@ -82,23 +88,88 @@ public class CardGameTest {
 	
 	// TODO AUTOMATICALLY TEST ALL FILES 
 	@Test
-	public void testPackReader() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
+	public void testPackReader() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, IOException
 	{
-		Method method = CardGame.class.getDeclaredMethod("packReader", Integer.class);
-
-		method.setAccessible(true);
+		boolean exists = false;
+    	Scanner myScan2 = new Scanner(System.in); // Create a Scanner object
+    	File f = null;
+    	//this while loop will run until a valid file is inputed
+    	while(!exists) {
+		    String fileName = "testPack.txt";  // Read user input
+		    //reads file
+		    f = new File(fileName);
+		    //if condition to check the file exists
+		    if(f.exists() == true) {
+		    	//if file exists breaks the while loop
+		    	exists = true;
+		    }else {
+		    	System.out.println("This is not a valid file");
+		    }
+    	}
+    	
+    	//creates a file reader
+	    FileReader fr = new FileReader(f);
+	    BufferedReader reader = new BufferedReader(fr);
+	    
+	    //creates new card ArrayList
+	    ArrayList<Card> Cards = new ArrayList<Card>();
+	    
+	    //reads lines and adds cards objects to the ArrayList
+	    String line;
+	    while((line = reader.readLine()) != null) {	
+	    	if (Integer.parseInt(line) >= 0)
+	    	{
+	    		Card card = new Card(Integer.parseInt(line));
+		    	Cards.add(card);
+	    	}    	
+	    }
+	    
+	    //this closes the open scanner and reader and returns the Cards ArrayList
+	    myScan2.close();
+	    reader.close();
 		
-		Object result = method.invoke(method, numberOfPlayers);
-		
-		ArrayList<Card> tempCards = (ArrayList<Card>) result;
-		
-		assertEquals(tempCards.size(), 32);
+		assertEquals(this.cards.size(), 32);
 	}
 
 	@Test
-	public void testPackReaderNegative() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException
+	public void testPackReaderNegative() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, IOException
 	{
-		
+		boolean exists = false;
+    	Scanner myScan2 = new Scanner(System.in); // Create a Scanner object
+    	File f = null;
+    	//this while loop will run until a valid file is inputed
+    	while(!exists) {
+		    String fileName = "negativeTestPack.txt";  // Read user input
+		    //reads file
+		    f = new File(fileName);
+		    //if condition to check the file exists
+		    if(f.exists() == true) {
+		    	//if file exists breaks the while loop
+		    	exists = true;
+		    }else {
+		    	System.out.println("This is not a valid file");
+		    }
+    	}
+    	
+    	//creates a file reader
+	    FileReader fr = new FileReader(f);
+	    BufferedReader reader = new BufferedReader(fr);
+	    
+	    //creates new card ArrayList
+	    ArrayList<Card> Cards = new ArrayList<Card>();
+	    
+	    //reads lines and adds cards objects to the ArrayList
+	    String line;
+	    while((line = reader.readLine()) != null) {	
+	    	if (Integer.parseInt(line) < 0)
+	    	{
+	    		assert(true);
+	    	}    	
+	    }
+	    
+	    //this closes the open scanner and reader and returns the Cards ArrayList
+	    myScan2.close();
+	    reader.close();
 	}
 	
 	@Test
